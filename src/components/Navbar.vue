@@ -8,10 +8,7 @@
       <!-- <div class="logo">Home</div> -->
     </router-link>
     <!-- <router-link to="/cart"> -->
-    <a-popover placement="bottomRight" trigger="click" style="color:white">
-      <template slot="content">
-        <CartPopover />
-      </template>
+    <router-link to="/cart" id='cart-text'>
         <template slot="title">
           <span>Cart</span>
         </template>
@@ -23,7 +20,7 @@
         />
         <span style="marginLeft: 5px">$({{getCartTotalAmount}})</span>
       </a-badge>
-    </a-popover>
+    </router-link>
       
     <!-- </router-link> -->
   </div>
@@ -31,13 +28,9 @@
 
 <script>
 import { mapState,mapGetters } from 'vuex';
-import CartPopover from '../components/CartPopover.vue'
 
 export default {
   name: 'Navbar',
-  components:{
-    CartPopover
-  },
   data() {
       return {};
   },
@@ -65,6 +58,8 @@ export default {
   font-style: oblique;
   text-transform: uppercase;
   font-variant: all-petite-caps;
-
+}
+#cart-text{
+  color: white;
 }
 </style>

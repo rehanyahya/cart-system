@@ -43,7 +43,8 @@ export default {
     created: async function(){
         console.log(this.$store)
         if(this.$route.name === 'Home' && this.$store.getters.getProductsIds.length === 0 ){
-            const { data } = await axios(`https://fake-products-app.herokuapp.com/products`);
+            // const { data } = await axios(`https://fake-products-app.herokuapp.com/products`);
+            const { data } = await axios(`https://fakestoreapi.com/products`);
             this.$store.dispatch('setProductsData',{data})
         }
     },

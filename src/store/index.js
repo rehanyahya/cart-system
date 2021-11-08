@@ -20,13 +20,16 @@ export default new Vuex.Store({
         ...state.products,
         data:{
           ...state.products.data,
-          [payload.data.id]:{...payload.data}
+          [payload.data.id]:{...state.products.data[payload.data.id], ...payload.data}
         }
       }
     },
     removeProductFromCart:(state,payload)=>{
       const index = state.cart.findIndex(item=>item.id === payload.id)
       state.cart.splice(index,1)
+    },
+    clearCart:(state)=>{
+      state.cart = []
     },
     addProductToCart:(state, payload)=>{
       const index = state.cart.findIndex(item=>item.id === payload.id)
@@ -46,7 +49,15 @@ export default new Vuex.Store({
         //   [payload.id]:payload.quantity,
         // }
       }
-    }
+    },
+    updateCart:(state, payload)=>{
+      const index = state.cart.findIndex(item=>item.id === payload.id)
+      if(payload.quantity <= 0) {
+        state.cart.splice(index,1)
+      }else{
+        state.cart[index].quantity = payload.quantity
+      }
+    },
   },
   getters: {
     getProductsIds:(state)=>{
@@ -62,19 +73,38 @@ export default new Vuex.Store({
       })
 
       return total.toFixed(2);
+    },
+    getBill:(state)=>{
+      let totalBill = []
+      state.cart.forEach((item)=>{
+        totalBill = [...totalBill, {...item,
+          title: state.products.data[item.id].title,
+          total: item.quantity * state.products.data[item.id].price,
+          price: state.products.data[item.id].price
+        }]
+      })
+      return totalBill;
+    },
+    getTotalBill: (state) => {
+      let sum = 0;
+      state.cart.forEach(
+        (item)=>{
+          sum = sum + (item.quantity * state.products.data[item.id].price)
+        }
+      )
+      return sum.toFixed(2);
     }
   },
   actions: {
     setProductsData: (context, payload) => {
-      console.log(payload)
       let productData = {};
       let ids = [];
       payload.data.map(item=>{
-        productData = {...productData, [item.id]:item}
+        const randomNumber = Math.floor(Math.random() * (10 - 0));
+        console.log(randomNumber)
+        productData = {...productData, [item.id]:{...item, quantity:randomNumber}}
         ids = [...ids, item.id]
       })
-      console.log(productData)
-      console.log(ids)
       context.commit('setProducts',{
         data:productData,
         ids

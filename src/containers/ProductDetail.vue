@@ -13,30 +13,32 @@
                             <h1>{{ products.data[id].title }}</h1>
                             <p>{{ products.data[id].description }}</p>
                             <h2>{{ `Price: $${products.data[id].price}` }}</h2>
+                            <p>Quantity: {{ products.data[id].quantity }}</p>
                             <!-- <br /> -->
                             <div>
                                 <a-button
                                     type="primary"
                                     shape="circle"
                                     @click="decreaseQuantity"
+                                    :disabled='products.data[id].quantity == 0 || quantity == 1'
                                 >
                                 -
                                 </a-button>
                                 {{ quantity }}
-                                <a-button type="primary" shape="circle" @click="increaseQuantity">
+                                <a-button type="primary" shape="circle" @click="increaseQuantity" :disabled='products.data[id].quantity == 0 || quantity == products.data[id].quantity'>
                                     +
                                 </a-button>
                                 <br />
                                 <br />
                             </div>
-                            <a-button type="primary" @click="onProductAdd(id,quantity)">
+                            <a-button type="primary" @click="onProductAdd(id,quantity)" :disabled='products.data[id].quantity == 0'>
                                 <a-icon
                                     type="shopping-cart"
                                     :style="{ marginTop: '3px',  }"
                                 />
                                 <span>Add To Cart</span>
                             </a-button>
-                            <a-button type="danger" @click="onProductRemove(id)" id='remove-button-style' :style="{ marginTop: '3px' }">
+                            <a-button type="danger" @click="onProductRemove(id)" id='remove-button-style' :style="{ marginTop: '3px' }" :disabled='products.data[id].quantity == 0'>
                                 Remove from cart
                             </a-button>
                         </a-col>
@@ -58,7 +60,8 @@ export default {
     created: async function(){
         console.log(this.$store)
         const { id } = this.$route.params;
-        const { data } = await axios(`https://fake-products-app.herokuapp.com/products/${id}`);
+        // const { data } = await axios(`https://fake-products-app.herokuapp.com/products/${id}`);
+        const { data } = await axios(`https://fakestoreapi.com/products/${id}`);
         this.$store.commit('setProduct',{data})
     //     console.log(data)
     //     this.product = data;
